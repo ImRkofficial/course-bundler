@@ -1,0 +1,51 @@
+.container{
+    height: 100vh;
+    padding: 5rem;
+    box-sizing: border-box;
+}
+
+.vector-graphics{
+    filter:drop-shadow(0 40px 10px rgba(0,0,0,0.3));
+    animation: vector-animation 1s ease-in-out infinite alternate;
+}
+
+@keyframes vector-animation {
+    to{
+        transform: translateY(-10px);
+    }
+}
+.brands-banner > svg ,
+svg.razorpayicon{
+    font-size: 3rem;
+    color: white;
+    transition: color 0.3s;
+}
+
+.brands-banner > svg:hover,
+svg.razorpayicon:hover{
+    color: rgb(118, 6, 222);
+}
+.container-2{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container-2 video{
+    border: 1px solid rgba(0,0,0,0.18);
+    width: 60%;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+    outline: none;
+}
+
+
+.courses{
+    margin-bottom: 1rem;
+    width: 250px;
+    transition: all 0.5s ease-in-out;
+}
+.courses:hover{
+    transform: translateY(-10px);
+}

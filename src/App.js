@@ -1,41 +1,45 @@
 import React from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import {BrowserRouter as Router,Route,Routes} from 'react-router-dom'
+import Home from './components/Home/Home';
+import Header from './components/layout/header/Header';
+import Courses from './components/courses/Courses';
+import Footer from './components/layout/footer/Footer';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ResetPassword from './components/auth/ResetPassword';
+import Contact from './components/auth/contact/contact';
+import Request from './components/request/Request';
+import About from './components/about/About';
+import Subscribe from './components/payments/Subscribe';
+import NotFound from './components/layout/notFound/NotFound';
+import PaymentFail from './components/payments/PaymentFail';
+import PaymentSuccess from './components/payments/PaymentSuccess';
 
 function App() {
   return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
-      </Box>
-    </ChakraProvider>
+    <Router>
+      <Header/>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgetpassword" element={<ForgotPassword />} />
+        <Route path="/resetpassword/:token" element={<ResetPassword />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/request" element={<Request />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/subscribe" element={<Subscribe />} />
+        <Route path="/paymentfail" element={<PaymentFail />} />
+        <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+
+
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer/>
+    </Router>
   );
 }
 
