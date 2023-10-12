@@ -2,7 +2,18 @@ import { Avatar, Button, Container, HStack, Heading, Image, Input, Modal, ModalB
 import React, { useState } from 'react';
 import {MdDeleteForever} from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {fileUploadStyle}  from './../../components/auth/Register';
+
+export const fileUploadStyle ={
+    "&::file-selector-button":{
+        cursor:"pointer",
+        marginLeft:"-5%",
+        width:"110%",
+        color:"black",
+        border:"none",
+        backgroundColor:"#BEADFA",
+        height:'100%'
+    }
+}
 
 const Profile = () => {
     const user = {
@@ -23,7 +34,10 @@ const Profile = () => {
         console.log(id)
     }
 
-    const changeImageSubmitHandler =(e,image)=>{};
+    const changeImageSubmitHandler =(e,image)=>{
+        e.preventDefault();
+        console.log(image)
+    };
     const {isOpen,onClose,onOpen} = useDisclosure();
   return (
     <>
@@ -99,7 +113,7 @@ const Profile = () => {
         )
     }
  
-    <ChangePhotoBox isOpen={isOpen} onClose={onClose}/>
+    <ChangePhotoBox isOpen={isOpen} onClose={onClose} changeImageSubmitHandler={changeImageSubmitHandler}/>
     </Container>
     </>
   )
@@ -126,6 +140,13 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
             setImage(file)
         }
     }
+
+    const closeHandler =()=>{
+        onClose();
+        setImagePreview('');
+        setImage('')
+
+    }
     return(
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay backdropFilter={'blur(10px'}/>
@@ -137,14 +158,14 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
                         <form action="" onSubmit={(e)=>changeImageSubmitHandler(e,image)}>
                             <VStack spacing={8}>
                                 <Avatar boxSize={48} src={imagePreview} />
-                                <Input type='file' css={{'&::file-selector-button':fileUploadStyle}} onChange={changeImage}/>
-                                <Button w={'full'} colorScheme='purple'>Change</Button>
+                                <Input accept='image/*' focusBorderColor='purple.500' type='file' css={fileUploadStyle} onChange={changeImage}/>
+                                <Button w={'full'} type={'submit'} colorScheme='purple'>Change</Button>
                             </VStack>
                         </form>
                     </Container>
                 </ModalBody>
                 <ModalFooter>
-                    <Button mr={3} onClick={onclose}>Cancel</Button>
+                    <Button mr={3} onClick={closeHandler}>Cancel</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>
