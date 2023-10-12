@@ -11,7 +11,7 @@ const LinkButton =({url="/",title="Home",onClose})=>(
 )
 
 const Header = () => {
-    let isAuthenticated = false;
+    let isAuthenticated = true;
     const user = {
         role:'admin'
     }
@@ -27,6 +27,7 @@ const Header = () => {
             <ColorModeSwitcher />
             <Button width={12} height={12} rounded={'full'} colorScheme='purple' position={'fixed'} top={6} left={6}
                 onClick={onOpen}
+                zIndex={'overlay'}
             >
                 <RiMenu5Fill />
             </Button>

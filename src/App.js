@@ -15,14 +15,22 @@ import Subscribe from './components/payments/Subscribe';
 import NotFound from './components/layout/notFound/NotFound';
 import PaymentFail from './components/payments/PaymentFail';
 import PaymentSuccess from './components/payments/PaymentSuccess';
+import CoursePage from './components/Course/CoursePage';
+import Profile from './components/Profile/Profile';
 
 function App() {
+
+  // Used For not select the video using inspect
+  // window.addEventListener('contextmenu',(e)=>{
+  //   e.preventDefault();
+  // })
   return (
     <Router>
       <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/course/:id" element={<CoursePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgetpassword" element={<ForgotPassword />} />
@@ -33,6 +41,7 @@ function App() {
         <Route path="/subscribe" element={<Subscribe />} />
         <Route path="/paymentfail" element={<PaymentFail />} />
         <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+        <Route path="/profile" element={<Profile />} />
 
 
 

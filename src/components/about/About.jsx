@@ -3,7 +3,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import introVideo from './../../assets/videos/introVideo.mp4';
 import { RiSecurePaymentFill } from 'react-icons/ri';
-import termsAndConditions from './../../assets/docs/termsAndConditions';
 import Data from './../../assets/docs/termsAndConditions';
 
 const Founder = ()=>(

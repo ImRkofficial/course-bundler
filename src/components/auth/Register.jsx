@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
 
-const fileUploadStyle ={
+export const fileUploadStyle ={
     "&::file-selector-button":{
         cursor:"pointer",
         marginLeft:"-5%",
