@@ -15,11 +15,11 @@ const users =[{
 
 }];
 
-const onChangrHandler = (userId)=>{
-  console.log('Clicked')
+const onChangeHandler = (userId)=>{
+  console.log(userId)
 }
 const onDeleteHandler = (userId)=>{
-  console.log('Clicked')
+  console.log(userId)
 }
 const Users = () => {
   return (
@@ -44,7 +44,7 @@ const Users = () => {
         </Thead>
         <Tbody>
         {users.map((item)=>(
-          <Row key={item._id} item={item} onChangrHandler={onChangrHandler}/>
+          <Row key={item._id} item={item} onChangeHandler={onChangeHandler}/>
         ))}
         </Tbody>
       </Table>
@@ -70,8 +70,8 @@ function Row({item}){
         <Td>{item.subscription.status === 'active' ? 'Active' : 'Not Active'}</Td>
         <Td isNumeric>
           <HStack justifyContent={'flex-end'}>
-            <Button variant={'outline'} color={'purple.500'} onClick={onChangrHandler}>Change Role</Button>
-            <Button color={'purple.600'} onClick={onDeleteHandler}>
+            <Button variant={'outline'} color={'purple.500'} onClick={(e)=>onChangeHandler(item._id)}>Change Role</Button>
+            <Button color={'purple.600'} onClick={(e)=>onDeleteHandler(item._id)}>
               <RiDeleteBin7Fill/>
             </Button>
           </HStack>
