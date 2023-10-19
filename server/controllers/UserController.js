@@ -187,14 +187,20 @@ export const resetPassword = catchAsyncError(async(req,res,next)=>{
 export const addToPlaylist = catchAsyncError(async(req,res,next)=>{
 
     const user = await User.findById(req.user._id);
-    if(!user){
-        return next(new ErrorHandler('Please login',401))
-    }
 
     const course = await Course.findById(req.body.id);
 
     if(!course){
         return next(new ErrorHandler('Inavaild Course Id',404));
+    }
+
+    const itemExist = user.playlist.find((item)=>{
+        if(item.course.toString() === course._id.toString())
+        return true;
+    })
+
+    if(itemExist){
+        return next(new ErrorHandler('Item Already Added',409));
     }
 
     user.playlist.push({
@@ -213,7 +219,29 @@ export const addToPlaylist = catchAsyncError(async(req,res,next)=>{
 
 
 export const removeFromPlaylist = catchAsyncError(async(req,res,next)=>{
+
+    const user = await User.findById(req.user._id);
+
+    const course = await Course.findById(req.query.id);
+
+    if(!course){
+        return next(new ErrorHandler('Course Id Invalid',404))
+    }
+
+    const newPlayList = user.playlist.filter(item=>{
+        if(item.course.toString() !== course._id.toString())
+        return item
+    })
+
+    user.playlist = newPlayList;
+
+    await user.save();
+
+
     res.status(200).json({
-        success:true
+        success:true,
+        message:"Removed from playlist"
     })
 });
+
+
