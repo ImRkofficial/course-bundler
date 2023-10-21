@@ -54,23 +54,35 @@ export const getCourseLectures = catchAsyncError(async (req,res,next)=>{
     })
 })
 
+
+// Maxvideo length is 100MB beacuse we are using a free plan of cloudinary
 export const addLecture = catchAsyncError(async (req,res,next)=>{
     const {id} = req.params;
     const {title,description} = req.body;
 
-    // const file = req.file;
-
+    
     const course =await Course.findById(id);
-
+    
     if(!course){
         return next(new ErrorHandler('Course Not Found',404))
     };
+    const file = req.file;
+
+    if(!title || !description || !file){
+        return next(new ErrorHandler('Please fill all fields',500))
+    }
+
+    const fileUri = getDataUri(file);
+
+   const myCloud  = await cloudinary.v2.uploader.upload(fileUri.content,{
+    resource_type:'video'
+   });
 
     course.lectures.push({
         title,description,
         video:{
-            public_id:'url',
-            url:"url"
+            public_id:myCloud.public_id,
+            url:myCloud.secure_url
         }
     })
 
@@ -83,5 +95,66 @@ export const addLecture = catchAsyncError(async (req,res,next)=>{
         success:true,
         message:'Lecture Added Successfully'
 
+    })
+});
+
+
+export const deleteCourse = catchAsyncError(async (req,res,next)=>{
+    const {id}  = req.params;
+
+    const course = await Course.findById(id);
+
+    if(!course){
+        return next(new ErrorHandler("Course not found",404));
+    }
+
+    await cloudinary.v2.uploader.destroy(course.poster.public_id)
+
+    for (let courseLecture = 0; courseLecture < course.lectures.length; courseLecture++) {
+        const element = course.lectures[courseLecture];
+        await cloudinary.v2.uploader.destroy(element.video.public_id,{
+            resource_type:'video'
+        });
+    }
+
+    await Course.findByIdAndDelete(id);
+
+    res.status(200).json({
+        success:true,
+        message:"Course Deleted successfully."
+    })
+});
+
+export const deleteLecture = catchAsyncError(async (req,res,next)=>{
+    const {courseId,lectureId} = req.query;
+
+    const course = await Course.findById(courseId);
+
+    if(!course){
+        return next(new ErrorHandler('Course not found','404'));
+    }
+
+    let lecture = course.lectures.find((item)=>{
+        if(item._id.toString() == lectureId.toString()){
+            return item;
+        }
+    })
+
+    await cloudinary.v2.uploader.destroy(lecture.video.public_id,{
+        resource_type:'video'
+    })
+
+    course.lectures = course.lectures.filter((item)=>{
+        if(item._id.toString() !== lectureId.toString()){
+            return item;
+        }
+    })
+
+    course.numOfVideos = course.lectures.length;
+    await course.save();
+
+    res.status(200).json({
+        success:true,
+        message:"Lecture deleted successfully"
     })
 })
