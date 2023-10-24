@@ -22,9 +22,11 @@ app.use(cookieParser())
 import course from './routes/CourseRoutes.js';
 import user from './routes/UserRoutes.js';
 import payment from './routes/PaymentRoutes.js';
+import other from './routes/OtherRoutes.js';
 app.use('/api/v1', course);
 app.use('/api/v1', user);
 app.use('/api/v1', payment);
+app.use('/api/v1', other);
 
 
 
