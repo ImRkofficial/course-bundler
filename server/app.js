@@ -35,3 +35,6 @@ export default app;
 
 
 app.use(ErrorMiddleware);
+
+
+// mongodb+srv://rahulsharma:F4UgzQKqYQaBJbPt@cluster0.rfnrpp6.mongodb.net/courseBundler?retryWrites=true
