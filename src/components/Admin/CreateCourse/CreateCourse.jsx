@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Heading, Image, Input, Select, VStack } from '@chakra-ui/react'
+import { Button, Container, Grid, Heading, Image, Input, Select, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import SideBar from '../SideBar'
 
