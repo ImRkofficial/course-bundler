@@ -5,12 +5,14 @@ config({
 import express from 'express';
 import ErrorMiddleware from './middlewares/Error.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 
 const app = express();
 
 // Using middlewares
 app.use(express.json());
+app.use(cors())
 app.use(express.urlencoded({
     extended: true
 }))
