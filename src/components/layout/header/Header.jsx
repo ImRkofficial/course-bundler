@@ -11,7 +11,7 @@ const LinkButton =({url="/",title="Home",onClose})=>(
 )
 
 const Header = () => {
-    let isAuthenticated = true;
+    let isAuthenticated = false;
     const user = {
         role:'admin'
     }
