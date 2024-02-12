@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {BrowserRouter as Router,Route,Routes} from 'react-router-dom'
 import Home from './components/Home/Home';
 import Header from './components/layout/header/Header';
@@ -23,6 +23,10 @@ import DashBoard from './components/Admin/Dashboard/DashBoard';
 import AdminCourses from './components/Admin/AdminCourses/AdminCourses';
 import CreateCourse from './components/Admin/CreateCourse/CreateCourse';
 import Users from './components/Admin/Users/Users';
+import { useSelector,useDispatch } from 'react-redux';
+import toast, { Toaster } from 'react-hot-toast';
+import { loadUser } from './redux/actions/user';
+import {ProtectedRoute} from 'protected-route-react';
 
 function App() {
 
@@ -30,15 +34,40 @@ function App() {
   // window.addEventListener('contextmenu',(e)=>{
   //   e.preventDefault();
   // })
+  const {isAuthenticated,user,error,message} = useSelector(state=>state.user);
+
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    if(error){
+      toast.error(error)
+      dispatch({type:"clearError"})
+    }
+    if(message){
+      toast.success(message)
+      dispatch({type:"clearMessage"})
+    }
+  },[dispatch,error,message])
+
+  useEffect(()=>{
+    dispatch(loadUser())
+  },[dispatch])
   return (
     <Router>
-      <Header/>
+      <Header isAuthenticated={isAuthenticated} user={user}/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:id" element={<CoursePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={
+          <ProtectedRoute isAuthenticated={!isAuthenticated} redirect="/profile">
+            <Login />
+          </ProtectedRoute>
+        } />
+        <Route path="/register" element={
+          <ProtectedRoute isAuthenticated={!isAuthenticated} redirect="/profile">
+            <Register />
+          </ProtectedRoute>
+        } />
         <Route path="/forgetpassword" element={<ForgotPassword />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
         <Route path="/contact" element={<Contact />} />
@@ -47,7 +76,11 @@ function App() {
         <Route path="/subscribe" element={<Subscribe />} />
         <Route path="/paymentfail" element={<PaymentFail />} />
         <Route path="/paymentsuccess" element={<PaymentSuccess />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Profile />
+            </ProtectedRoute>}
+           />
         <Route path="/changepassword" element={<ChangePassword />} />
         <Route path="/updateprofile" element={<UpdateProfile />} />
 
@@ -67,6 +100,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer/>
+      <Toaster/>
     </Router>
   );
 } 

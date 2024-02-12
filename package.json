@@ -2,7 +2,7 @@
   "name": "coursebundler",
   "version": "0.1.0",
   "private": true,
-  "proxy":"https://course-app-backend-nu.vercel.app",
+  "proxy":"https://course-app-backend-cgsa.onrender.com",
   "dependencies": {
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",

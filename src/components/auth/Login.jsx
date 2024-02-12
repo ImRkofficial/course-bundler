@@ -20,7 +20,7 @@ const Login = () => {
     <>
     <Container h={'95vh'}>
         <VStack h={'full'} justifyContent={'center'} spacing={16}>
-            <Heading children={"Welcomr to CourseBundler"} />
+            <Heading children={"Welcome to CourseBundler"} />
             <form onSubmit={submitHandler} style={{width:'100%'}}>
                 <Box my={4}>
                 <FormLabel htmlFor='email' children={"Email Address"} />
