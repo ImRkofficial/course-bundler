@@ -15,20 +15,11 @@ export const fileUploadStyle ={
     }
 }
 
-const Profile = () => {
-    const user = {
-        name:'Rahul',
-        email:'rahul@gmail.com',
-        createdAt:String(new Date().toISOString()),
-        role:'user',
-        subscription:{
-            status:"active"
-        },
-        playList:[{
-            course:'Web',
-            poster:'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29kZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60'
-        }]
-    };
+const Profile = ({user}) => {
+    
+    console.log(user.avatar.url);
+ let dummy ='https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29kZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60';
+        
 
     const removeFormPlayListHandler = (id)=>{
         console.log(id)
@@ -45,7 +36,7 @@ const Profile = () => {
     <Heading children={'Profile'} m={8} textTransform={'uppercase'}/>
     <Stack justifyContent={'flex-start'} alignItems={'center'} direction={['column','row']} spacing={[8,16]} p={8}>
         <VStack>
-             <Avatar boxSize={'48'} />
+             <Avatar boxSize={'48'}  src={user?.avatar?.url}/>
             <Button colorScheme='purple' variant={'outline'} onClick={onOpen}>
                 Change Photo
             </Button>
@@ -53,21 +44,21 @@ const Profile = () => {
         <VStack spacing={4} alignItems={['center','flex-start']}>
             <HStack>
                 <Text children={'Name:'} fontWeight={'bold'}/>
-                <Text children={user.name}/>
+                <Text children={user?.name}/>
             </HStack>
             <HStack>
                 <Text children={'Email:'} fontWeight={'bold'}/>
-                <Text children={user.email}/>
+                <Text children={user?.email}/>
             </HStack>
             <HStack>
                 <Text children={'Created At:'} fontWeight={'bold'}/>
-                <Text children={user.createdAt.split('T')[0]}/>
+                <Text children={user.createdAt?.split('T')[0]}/>
             </HStack>
             {
-                user.role !== 'admin' && (
+                user?.role !== 'admin' && (
                     <HStack>
                 <Text children={'Subscription'} fontWeight={'bold'}/>
-                {user.subscription.status === 'active' ? (
+                {user?.subscription?.status === 'active' ? (
                     <Button color={'purple.500'} variant={'unstyled'}>Cancel Subscription</Button>
                 ):(
                     <Link to={'/subscribe'}>
@@ -92,10 +83,10 @@ const Profile = () => {
 
     <Heading children={'Playlist'} size={'md'} my={8} />
     {
-        user.playList.length > 0 && (
+        user?.playList?.length > 0 && (
             <Stack alignItems={'center'} direction={['column','row']} flexWrap={'wrap'} p={4}>
                 {
-                    user.playList.map((element)=>(
+                    user?.playList?.map((element)=>(
                         <VStack w={48} m={2} key={element.course}>
                             <Image boxSize={'full'} objectFit={'contain'} src={element.poster}/>
                             <HStack>

@@ -1,6 +1,8 @@
 import { Avatar, Box, Button, Container, FormLabel, Heading, Input, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { register } from '../../redux/actions/user';
 
 
 export const fileUploadStyle ={
@@ -23,15 +25,30 @@ const Register = () => {
     const [image,setImage] = useState('');
     const [imagePreview,setImagePreview] = useState('');
 
+    const dispatch = useDispatch();
+
     const changeImageHandler  = (e)=>{
         const file = e.target.files[0];
         const reader = new FileReader();
-        reader.readAsDataURL(file)
+        reader?.readAsDataURL(file)
 
         reader.onloadend =()=>{
             setImagePreview(reader.result)
             setImage(file)
         }
+    }
+   
+    const submitHandler = (e)=>{
+        e.preventDefault();
+
+        const myForm = new FormData();
+        
+        myForm.append("name",name);
+        myForm.append("email",email);
+        myForm.append("password",password);
+        myForm.append('file',image)
+
+        dispatch(register(myForm))
     }
 
   return (
@@ -39,7 +56,7 @@ const Register = () => {
     <Container h={'full'} py={30} my={10}>
         <VStack h={'full'} justifyContent={'center'} spacing={16}>
             <Heading textTransform={"uppercase"} children={"Register"} />
-            <form style={{width:'100%'}}>
+            <form onSubmit={submitHandler} style={{width:'100%'}}>
                 <Box m={4} display={'flex'} justifyContent={'center'}>
                     <Avatar src={imagePreview} size={'2xl'} />
                 </Box>
@@ -53,6 +70,7 @@ const Register = () => {
                     focusBorderColor='purple.500'
                     placeholder='Name'
                     type='text'
+                    name='name'
                 />
                 </Box>
                 <Box my={4}>
@@ -65,6 +83,7 @@ const Register = () => {
                     focusBorderColor='purple.500'
                     placeholder='example@mail.com'
                     type='email'
+                    name='email'
                 />
                 </Box>
                 <Box my={4}>
@@ -77,18 +96,20 @@ const Register = () => {
                     focusBorderColor='purple.500'
                     placeholder='********'
                     type='password'
+                    name='password'
                 />
                 </Box>
                 <Box my={4}>
                 <FormLabel htmlFor='chooseAvatar' children={"Choose Avatar"} />
                 <Input
-                    required 
+                     required
                     id='chooseAvatar'
                     accept='image/*'
                     focusBorderColor='purple.500'
                     type='file'
                     css={fileUploadStyle}
                     onChange={changeImageHandler}
+                    name='file'
                 />
                 </Box>
                 <Box >
