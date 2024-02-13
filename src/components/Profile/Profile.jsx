@@ -1,7 +1,11 @@
 import { Avatar, Button, Container, HStack, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure, useStatStyles } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {MdDeleteForever} from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { updateProfilePicture } from '../../redux/actions/profile';
+import { loadUser } from '../../redux/actions/user';
+import toast from 'react-hot-toast';
 
 export const fileUploadStyle ={
     "&::file-selector-button":{
@@ -16,19 +20,39 @@ export const fileUploadStyle ={
 }
 
 const Profile = ({user}) => {
-    
-    console.log(user.avatar.url);
+    useEffect(()=>{},[user])
  let dummy ='https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29kZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60';
         
-
+    const dispatch = useDispatch();
+    const {loading,message,error} = useSelector(state=>state.profile);
+    console.log(loading,message,error);
     const removeFormPlayListHandler = (id)=>{
         console.log(id)
     }
 
-    const changeImageSubmitHandler =(e,image)=>{
+    const changeImageSubmitHandler = async (e,image)=>{
         e.preventDefault();
-        console.log(image)
+        const formData = new FormData();
+
+        formData.append("file",image);
+        await dispatch(updateProfilePicture(formData));
+       dispatch(loadUser())
+
     };
+    useEffect(()=>{
+        if(error){
+            toast.error(error)
+            setTimeout(() => {
+                dispatch({type:"clearError"})
+            }, 3000);
+        }
+        if(message){
+            toast.success(message)
+            setTimeout(() => {
+                dispatch({type:"clearMessage"})
+            }, 3000);
+        }
+    },[dispatch,error,message])
     const {isOpen,onClose,onOpen} = useDisclosure();
   return (
     <>
@@ -37,7 +61,7 @@ const Profile = ({user}) => {
     <Stack justifyContent={'flex-start'} alignItems={'center'} direction={['column','row']} spacing={[8,16]} p={8}>
         <VStack>
              <Avatar boxSize={'48'}  src={user?.avatar?.url}/>
-            <Button colorScheme='purple' variant={'outline'} onClick={onOpen}>
+            <Button  colorScheme='purple' variant={'outline'} onClick={onOpen}>
                 Change Photo
             </Button>
         </VStack>
@@ -52,7 +76,7 @@ const Profile = ({user}) => {
             </HStack>
             <HStack>
                 <Text children={'Created At:'} fontWeight={'bold'}/>
-                <Text children={user.createdAt?.split('T')[0]}/>
+                <Text children={user?.createdAt?.split('T')[0]}/>
             </HStack>
             {
                 user?.role !== 'admin' && (
@@ -104,7 +128,7 @@ const Profile = ({user}) => {
         )
     }
  
-    <ChangePhotoBox isOpen={isOpen} onClose={onClose} changeImageSubmitHandler={changeImageSubmitHandler}/>
+    <ChangePhotoBox loading={loading} isOpen={isOpen} onClose={onClose} changeImageSubmitHandler={changeImageSubmitHandler}/>
     </Container>
     </>
   )
@@ -117,7 +141,7 @@ export default Profile;
 
 
 
-function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
+function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler,loading}){
     const [image,setImage] = useState('');
     const [imagePreview,setImagePreview] = useState('');
 
@@ -150,7 +174,7 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
                             <VStack spacing={8}>
                                 <Avatar boxSize={48} src={imagePreview} />
                                 <Input accept='image/*' focusBorderColor='purple.500' type='file' css={fileUploadStyle} onChange={changeImage}/>
-                                <Button w={'full'} type={'submit'} colorScheme='purple'>Change</Button>
+                                <Button isLoading={loading} w={'full'} type={'submit'} colorScheme='purple'>Change</Button>
                             </VStack>
                         </form>
                     </Container>

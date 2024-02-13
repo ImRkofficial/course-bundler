@@ -69,7 +69,7 @@ function App() {
               element={
                 <ProtectedRoute
                   isAuthenticated={!isAuthenticated}
-                  redirect="/profile"
+                  redirect="/"
                 >
                   <Login />
                 </ProtectedRoute>
@@ -121,7 +121,7 @@ function App() {
               path="/updateprofile"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <UpdateProfile />
+                  <UpdateProfile user={user} />
                 </ProtectedRoute>
               }
             />
