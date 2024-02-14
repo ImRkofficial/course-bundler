@@ -106,3 +106,40 @@ export const changePassword = (oldPassword, newPassword) => async (dispatch) => 
       });
     }
   };
+
+
+  
+
+export const addToPlayList =  (id) => async (dispatch)=>{
+  try {
+      dispatch({type:"addToPlayListRequest"})
+
+      const {data} = await axios.post(`${server}/addtoplaylist`,{id},{
+        withCredentials:true
+      });
+
+      dispatch({type:"addToPlayListSuccess",payload:data.message})
+  } catch (error) {
+      dispatch({
+          type:"addToPlayListFail",
+          payload:error.response.data.message
+      })
+  }
+};
+
+export const removeFromPlayList =  (id) => async (dispatch)=>{
+  try {
+      dispatch({type:"removeFromPlayListRequest"})
+
+      const {data} = await axios.delete(`${server}/removefromplaylist?id=${id}`,{
+        withCredentials:true
+      });
+
+      dispatch({type:"removeFromPlayListSuccess",payload:data.message})
+  } catch (error) {
+      dispatch({
+          type:"removeFromPlayListFail",
+          payload:error.response.data.message
+      })
+  }
+};

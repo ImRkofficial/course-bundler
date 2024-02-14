@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getAllCourses } from '../../redux/actions/course';
 import toast from 'react-hot-toast';
+import { addToPlayList } from '../../redux/actions/profile';
+import { loadUser } from '../../redux/actions/user';
 
-const Course = ({views,title,imageSrc,id,addPlayListHandler,creator,description,lectureCount})=>{
+const Course = ({views,title,imageSrc,id,addPlayListHandler,creator,description,lectureCount,courseId,loading})=>{
     return(
         <>
         <VStack className='courses' alignItems={['center','flex-start']}>
@@ -29,8 +31,8 @@ const Course = ({views,title,imageSrc,id,addPlayListHandler,creator,description,
                     Watch Now
                 </Button>
                 </Link>
-                <Button colorScheme='purple' variant={'ghost'} onClick={()=>addPlayListHandler(id)}>
-                    Add to PlayList
+                <Button isDisabled={loading} colorScheme='purple' variant={'ghost'} onClick={()=>addPlayListHandler(courseId)}>
+                    Add to Playlist
                 </Button>
             </Stack>
         </VStack>
@@ -42,22 +44,30 @@ const Courses = () => {
     const [keyword,setKeyword] = useState('');
     const [category,setCategory] = useState('');
     const dispatch = useDispatch();
-    const {loading,courses,error} = useSelector(state=>state.course);
+    const {loading,courses,error,message} = useSelector(state=>state.course);
 
-    const addtoPlayListHandler  = ()=>{
-        console.log('Added to PlayList')
+    const addtoPlayListHandler  = async (courseId)=>{
+       await dispatch(addToPlayList(courseId));
+       dispatch(loadUser())
     }
 
     const categories = ['Andriod Development','Web Development','iOS Development','Game Development',"Data Structures & Algorithm","Machine Learning","App Development"];
   
     useEffect(()=>{
         dispatch(getAllCourses(category,keyword));
-
         if(error){
-            toast.error(error);
-            dispatch({type:"clearError"})
+            toast.error(error); 
+            setTimeout(() => {
+                dispatch({type:"clearError"})
+            }, 1000);
         }
-    },[category,keyword,dispatch])
+        if(message){
+            toast.success(message)
+           setTimeout(() => {
+            dispatch({type:"clearMessage"})
+           }, 1000);
+        }
+    },[category,keyword,dispatch,message,error])
 
     return (
     <>
@@ -83,11 +93,10 @@ const Courses = () => {
           alignItems={['center','flex-start']}
           >
 
-        {
-            courses.length > 0  ? (courses.map((item)=>(
+         {
+            courses?.length > 0  ? (courses?.map((item,i)=>(
                 <Course
-
-                    key={item?._id}
+                    key={i}
                     title={item?.title}
                     description={item?.description}
                     id={item?._id}
@@ -96,6 +105,8 @@ const Courses = () => {
                     lectureCount={item?.numOfVideos}
                     addPlayListHandler={addtoPlayListHandler}
                     imageSrc={item?.poster?.url}
+                    courseId={item?._id}
+                    loading={loading}
                 />
             ))) : (
                 <Heading  mt="4" children="Courses not found"/>

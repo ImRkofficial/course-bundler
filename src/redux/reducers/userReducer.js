@@ -56,6 +56,17 @@ export const userReducer = createReducer({},{
         state.isAuthenticated=false;
         state.error=action.payload
     },
+    removeFromPlayListRequest:(state)=>{
+        state.loading = true;
+    },
+    removeFromPlayListSuccess:(state,action)=>{
+        state.loading =false;
+        state.message = action.payload;
+    },
+    removeFromPlayListFail:(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+    },
     clearError:(state)=>{
         state.error=null;
     },

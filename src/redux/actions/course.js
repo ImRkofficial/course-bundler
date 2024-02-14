@@ -6,7 +6,6 @@ export const getAllCourses =  (category="",keyword="") => async (dispatch)=>{
         dispatch({type:"allCoursesRequest"})
 
         const {data} = await axios.get(`${server}/courses?keyword=${keyword}&category=${category}`);
-
         dispatch({type:"allCoursesSuccess",payload:data.courses})
     } catch (error) {
         dispatch({
@@ -15,3 +14,4 @@ export const getAllCourses =  (category="",keyword="") => async (dispatch)=>{
         })
     }
 };
+
