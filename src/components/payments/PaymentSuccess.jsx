@@ -1,9 +1,17 @@
 import { Box, Button, Container, Heading, Text, VStack } from '@chakra-ui/react'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {RiCheckboxCircleFill} from 'react-icons/ri';
 import {Link} from 'react-router-dom'
 
 const PaymentSuccess = () => {
+
+  const params =  new URLSearchParams(window.location.search);
+  const [refId,setRefId] = useState("")
+  let id = params.get("reference");
+
+  useEffect(()=>{
+    setRefId(id)
+  },[id])
   return (
     <>
     <Container h={'90VH'} p={16}>
@@ -25,7 +33,7 @@ const PaymentSuccess = () => {
           Go to Profile
         </Button>
       </Link>
-      <Heading fontSize={'lg'} children={`Reference: Ref.No.`}/>
+      <Heading fontSize={'lg'} children={`Reference: ${refId}`}/>
       </VStack>
     </Container>
     </>

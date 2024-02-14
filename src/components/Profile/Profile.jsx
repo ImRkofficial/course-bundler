@@ -4,7 +4,7 @@ import {MdDeleteForever} from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { removeFromPlayList, updateProfilePicture } from '../../redux/actions/profile';
-import { loadUser } from '../../redux/actions/user';
+import { cancelSubscription, loadUser } from '../../redux/actions/user';
 import toast from 'react-hot-toast';
 
 export const fileUploadStyle ={
@@ -23,6 +23,7 @@ const Profile = ({user}) => {
    
     const dispatch = useDispatch();
     const {loading,message,error} = useSelector(state=>state.profile);
+    const {loading:subscriptionLoading,message:subscriptionMessage,error:subscriptionError} = useSelector(state=>state.subscription);
     console.log(loading,message,error);
     const removeFormPlayListHandler = async (id)=>{
        await dispatch(removeFromPlayList(id));
@@ -38,6 +39,11 @@ const Profile = ({user}) => {
        dispatch(loadUser())
 
     };
+    const cancelSubscriptionHandler =async ()=>{
+       await dispatch(cancelSubscription())
+        dispatch(loadUser())
+    };
+
     useEffect(()=>{
         if(error){
             toast.error(error)
@@ -49,7 +55,21 @@ const Profile = ({user}) => {
                     dispatch({type:"clearMessage"})
                 }, 2000);
         }
-    },[dispatch,error,message])
+        if(subscriptionError){
+            toast.error(subscriptionError)
+            setTimeout(() => {
+                dispatch({type:"clearError"})
+            }, 4000);
+        }
+        if(subscriptionMessage){
+            toast.success(subscriptionMessage)
+            setTimeout(() => {
+                dispatch({type:"clearMessage"})
+            }, 4000);
+        }
+    },[dispatch,error,message,subscriptionMessage,subscriptionError]);
+
+
     const {isOpen,onClose,onOpen} = useDisclosure();
   return (
     <>
@@ -79,8 +99,8 @@ const Profile = ({user}) => {
                 user?.role !== 'admin' && (
                     <HStack>
                 <Text children={'Subscription'} fontWeight={'bold'}/>
-                {user?.subscription?.status === 'active' ? (
-                    <Button color={'purple.500'} variant={'unstyled'}>Cancel Subscription</Button>
+                {user?.subscription?.status === 'created' ? (
+                    <Button isLoading={subscriptionLoading} onClick={cancelSubscriptionHandler} color={'purple.500'} variant={'unstyled'}>Cancel Subscription</Button>
                 ):(
                     <Link to={'/subscribe'}>
                         <Button colorScheme='purple' variant={'solid'}>

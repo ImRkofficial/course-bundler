@@ -1,7 +1,60 @@
 import { Box, Button, Container, Heading, Text, VStack } from '@chakra-ui/react';
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect } from 'react'
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { server } from '../../redux/Store';
+import { buySubscription } from '../../redux/actions/user';
+import toast from 'react-hot-toast';
+import logo from './../../assets/images/logo.svg';
 
-const Subscribe = () => {
+const Subscribe = ({user}) => {
+  const dispatch = useDispatch();
+  const [key,setKey] = useState("");
+  const {loading,subscriptionId,error}  = useSelector(state=>state.subscription);
+
+  const subscribeHandler = async ()=>{
+   const {data} =  await axios.get(`${server}/razorpaykey`);
+   setKey(data.key)
+
+   dispatch(buySubscription());
+
+  };
+   useEffect(()=>{
+    if(error){
+      toast.error(error)
+      dispatch({type:"clearError"})
+    }
+    if(subscriptionId){
+      const openPopup = ()=>{
+        const options = {
+            key: key, 
+            name: "Course-bundler Corp Limited",
+            description: "Get access to all premium content",
+            image: logo,
+            subscription_id: subscriptionId,
+            callback_url:`${server}/paymentverification`,
+            prefill: { 
+                name: user.name,
+                email: user.email,
+                contact: "" 
+            },
+            notes: {
+                address: "Coursebundler Private Limited Jaipur,302012"
+            },
+            theme: {
+                "color": "#832aff"
+            }
+        }
+
+        const razor = new window.Razorpay(options);
+        razor.open();
+      };
+      openPopup();   
+    }
+   },[dispatch,key,error,user.name,user.email,subscriptionId])
+  
+
   return (
     <>
     <Container h={'90vh'} p={16}> 
@@ -17,7 +70,7 @@ const Subscribe = () => {
           <Heading size={'md'} children={'₹299 Only'} />
         </VStack>
 
-        <Button my={8} w={'full'} colorScheme='purple'>
+        <Button isLoading={loading} my={8} w={'full'} colorScheme='purple' onClick={subscribeHandler}>
           Buy Now
         </Button>
       </Box>

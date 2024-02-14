@@ -103,7 +103,7 @@ function App() {
               path="/subscribe"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <Subscribe />
+                  <Subscribe  user={user}/>
                 </ProtectedRoute>
               }
             />
