@@ -58,7 +58,7 @@ const Header = ({isAuthenticated = false,user}) => {
                                                 Log Out
                                             </Button>
                                     </HStack>
-                                    {user && user.role ==="admin" && <Link onClick={onClose}  to={'/admin/dashboard'}>
+                                    {(user && user.role ==="admin") || user?.user && user?.user?.role ==="admin" && <Link onClick={onClose}  to={'/admin/dashboard'}>
                                         <Button colorScheme='purple' margin={'4px'}>
                                             <RiDashboardFill/>
                                             Dashboard

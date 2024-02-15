@@ -53,6 +53,8 @@ function App() {
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
+
+  let isUserAdmin =(user && user.role === 'admin') || (user?.user && user?.user?.role === 'admin');
   return (
     <Router>
       {loading ? (
@@ -146,7 +148,7 @@ function App() {
                   isAuthenticated={isAuthenticated}
                   adminRoute={true}
                   redirect="/profile"
-                  isAdmin={user && user.role === 'admin'}
+                  isAdmin={isUserAdmin}
                 >
                   <DashBoard />
                 </ProtectedRoute>
@@ -156,7 +158,7 @@ function App() {
               path="/admin/courses"
               element={
                 <ProtectedRoute
-                  isAdmin={user && user.role === 'admin'}
+                  isAdmin={isUserAdmin}
                   adminRoute={true}
                   isAuthenticated={isAuthenticated}
                   redirect="/profile"
@@ -167,7 +169,7 @@ function App() {
             />
             <Route path="/admin/createcourse" element={
               <ProtectedRoute
-                isAdmin={user && user.role === "admin"}
+                isAdmin={isUserAdmin}
                 adminRoute={true}
                 isAuthenticated={isAuthenticated}
                 redirect="/profile"
@@ -177,7 +179,7 @@ function App() {
             } />
             <Route path="/admin/users" element={
               <ProtectedRoute
-                isAdmin={user && user.role=== "admin"}
+                isAdmin={isUserAdmin}
                 adminRoute={true}
                 isAuthenticated={isAuthenticated}
                 redirect="/profile"

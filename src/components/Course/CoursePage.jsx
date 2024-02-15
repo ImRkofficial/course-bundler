@@ -8,6 +8,7 @@ import Loader from '../Loader/Loader';
 
 const CoursePage = ({user}) => {
   let {user:mainUser} = user;
+  console.log(mainUser);
 
   const [lectureNumber,setLectureNumber] = useState(0);
   const dispatch = useDispatch();
@@ -17,9 +18,9 @@ const CoursePage = ({user}) => {
 
   useEffect(()=>{
     dispatch(getCourseLectures(params.id))
-  },[dispatch,params.id]);
+  },[dispatch,params.id,mainUser]);
 
-  if(mainUser.role !== 'admin' && (mainUser.subscription === undefined || mainUser.subscription.status !== "created" )){
+  if(mainUser?.role !== 'admin' && (mainUser?.subscription === undefined || mainUser?.subscription?.status !== "created" )){
     return <Navigate to={'/subscribe'}/>
 
   }
