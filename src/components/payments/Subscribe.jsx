@@ -12,6 +12,7 @@ const Subscribe = ({user}) => {
   const dispatch = useDispatch();
   const [key,setKey] = useState("");
   const {loading,subscriptionId,error}  = useSelector(state=>state.subscription);
+  const {error:courseError} = useSelector(state=>state.course);
 
   const subscribeHandler = async ()=>{
    const {data} =  await axios.get(`${server}/razorpaykey`);
@@ -23,6 +24,10 @@ const Subscribe = ({user}) => {
    useEffect(()=>{
     if(error){
       toast.error(error)
+      dispatch({type:"clearError"})
+    }
+    if(courseError){
+      toast.error(courseError)
       dispatch({type:"clearError"})
     }
     if(subscriptionId){
@@ -52,7 +57,7 @@ const Subscribe = ({user}) => {
       };
       openPopup();   
     }
-   },[dispatch,key,error,user.name,user.email,subscriptionId])
+   },[dispatch,key,error,user.name,user.email,subscriptionId,courseError])
   
 
   return (

@@ -15,3 +15,20 @@ export const getAllCourses =  (category="",keyword="") => async (dispatch)=>{
     }
 };
 
+export const getCourseLectures =  (id) => async (dispatch)=>{
+    try {
+        dispatch({type:"getCourseRequest"})
+
+        const {data} = await axios.get(`${server}/course/${id}`,{
+            withCredentials:true
+        });
+        console.log(data);
+        dispatch({type:"getCourseSuccess",payload:data.lectures})
+    } catch (error) {
+        dispatch({
+            type:"getCourseFail",
+            payload:error.response.data.message
+        })
+    }
+};
+

@@ -1,50 +1,36 @@
 import { Box, Grid, Heading, Text, VStack } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import introVideo from './../../assets/videos/introVideo.mp4';
+import { useDispatch, useSelector } from 'react-redux';
+import {Navigate, useParams} from 'react-router-dom';
+import { getCourseLectures } from '../../redux/actions/course';
+import Loader from '../Loader/Loader';
 
-const CoursePage = () => {
+const CoursePage = ({user}) => {
+  let {user:mainUser} = user;
+
   const [lectureNumber,setLectureNumber] = useState(0);
-  const lectures =[{
-    _id:'ewfwff1',
-    title:'sample title1',
-    description:'Dummy description afsf fdgj',
-    video:{
-      url:'dummyurl.rf'
-    }
+  const dispatch = useDispatch();
+  const params = useParams();
+  const {lectures,loading} = useSelector(state=>state.course);
+ 
 
-  },
-  {
-    _id:'ewfwff2',
-    title:'sample title2',
-    description:'Dummy description afsf fdgj',
-    video:{
-      url:'dummyurl.rf'
-    }
+  useEffect(()=>{
+    dispatch(getCourseLectures(params.id))
+  },[dispatch,params.id]);
 
-  },
-  {
-    _id:'ewfwff3',
-    title:'sample title3',
-    description:'Dummy description afsf fdgj',
-    video:{
-      url:'dummyurl.rf'
-    }
+  if(mainUser.role !== 'admin' && (mainUser.subscription === undefined || mainUser.subscription.status !== "created" )){
+    return <Navigate to={'/subscribe'}/>
 
-  },
-  {
-    _id:'ewfwff4',
-    title:'sample title4',
-    description:'Dummy description afsf fdgj',
-    video:{
-      url:'dummyurl.rf'
-    }
-
-  }]
+  }
   return (
     <>
+    {loading ? <Loader/> : (
     <Grid minH={'50vh'} templateColumns={['1fr','3fr 1fr']}>
-      <Box>
-      <video width={'100%'} autoPlay={true} controls src={introVideo}
+      {lectures && lectures.length > 0 ? (
+        <>
+          <Box>
+      <video width={'100%'} autoPlay={true} controls src={lectures[lectureNumber]?.video?.url}
                 controlsList='nodownload npremoteplayback'
                 disableRemotePlayback
                 disablePictureInPicture
@@ -52,9 +38,9 @@ const CoursePage = () => {
 
                 </video>
 
-                <Heading children={`#${lectureNumber+1} ${lectures[lectureNumber].title}`} m={4}/>
+                <Heading children={`#${lectureNumber+1} ${lectures[lectureNumber]?.title}`} m={4}/>
                 <Heading children="Description" m={4}/>
-                <Text m={4} children={lectures[lectureNumber].description}/>
+                <Text m={4} children={lectures[lectureNumber]?.description}/>
       </Box>
       <VStack>
         {lectures.map((item,index)=>(
@@ -75,7 +61,14 @@ const CoursePage = () => {
           </button>
         ))}
       </VStack>
+        </>
+      ):(
+        <>
+          <Heading children="No Lectures"/>
+        </>
+      )}
     </Grid>
+     )}
     </>
   )
 }
