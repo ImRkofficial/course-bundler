@@ -29,7 +29,7 @@ const CreateCourse = () => {
   const dispatch = useDispatch();
 
   const {loading,error,message} = useSelector(state => state.admin)
-
+console.log(error,message,loading,"Form create course");
   const changeImageHandler  = (e)=>{
     const file = e.target.files[0];
     const reader = new FileReader();

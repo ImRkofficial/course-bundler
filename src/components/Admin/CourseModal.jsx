@@ -15,7 +15,7 @@ export const fileUploadStyle ={
     }
   }
 
-const CourseModal = ({ isOpen, onClose, id, deleteButtonHandler, CourseTitle, lectures = [], addLectureHandler }) => {
+const CourseModal = ({ isOpen, onClose, id, deleteButtonHandler, CourseTitle, lectures = [],loading, addLectureHandler }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [video, setVideo] = useState('');
@@ -60,14 +60,18 @@ const CourseModal = ({ isOpen, onClose, id, deleteButtonHandler, CourseTitle, le
                                     <Heading children={`#${id}`} size={'sm'} opacity={0.4} />
                                 </Box>
                                 <Heading children={'Lectures'} size={'lg'} />
-                                <VideoCard
-                                    title={'React Practice'}
-                                    num={1}
-                                    lectureId={'23fwr4t4t43lecture'}
-                                    courseId={id}
-                                    deleteButtonHandler={deleteButtonHandler}
-                                    description="This is a dummy description"
-                                />
+                               {lectures?.length > 0 && lectures?.map((item,index)=>(
+                                 <VideoCard
+                                 key={index}
+                                 title={item.title}
+                                 num={index + 1}
+                                 lectureId={item._id}
+                                 courseId={id}
+                                 deleteButtonHandler={deleteButtonHandler}
+                                 description={item.description}
+                                 loading={loading}
+                             />
+                               ))}
                             </Box>
 
                             <Box>
@@ -89,7 +93,7 @@ const CourseModal = ({ isOpen, onClose, id, deleteButtonHandler, CourseTitle, le
                                                 <video controlsList='nodownload' controls src={videoPreview}></video>
                                             )
                                         }
-                                        <Button w={'full'} colorScheme='purple' type='submit'>
+                                        <Button w={'full'} colorScheme='purple' type='submit' isLoading={loading}>
                                             Upload
                                         </Button>
                                     </VStack>
@@ -110,14 +114,14 @@ const CourseModal = ({ isOpen, onClose, id, deleteButtonHandler, CourseTitle, le
 
 export default CourseModal;
 
-function VideoCard({ title, num, lectureId, courseId, deleteButtonHandler, description }) {
+function VideoCard({ title,loading, num, lectureId, courseId, deleteButtonHandler, description }) {
     return (
         <Stack direction={['column', 'row']} my={8} borderRadius={'lg'} boxShadow={'0 0 10px rgba(107,70,193,0.5)'} justifyContent={['flex-start', 'space-between']} p={[4, 8]}>
             <Box>
                 <Heading size={'sm'} children={`${num} ${title}`} />
                 <Text children={description} />
             </Box>
-            <Button color={'purple.600'} onClick={() => deleteButtonHandler(courseId, lectureId)}>
+            <Button isLoading={loading} color={'purple.600'} onClick={() => deleteButtonHandler(courseId, lectureId)}>
                 <RiDeleteBin7Fill />
             </Button>
 
