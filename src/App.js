@@ -31,9 +31,9 @@ import Loader from './components/Loader/Loader';
 
 function App() {
   // Used For not select the video using inspect
-  // window.addEventListener('contextmenu',(e)=>{
-  //   e.preventDefault();
-  // })
+   window.addEventListener('contextmenu',(e)=>{
+     e.preventDefault();
+   })
   const { isAuthenticated, user, error, message, loading } = useSelector(
     state => state.user
   );
