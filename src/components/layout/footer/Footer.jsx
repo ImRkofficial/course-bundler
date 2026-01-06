@@ -12,10 +12,10 @@ const Footer = () => {
                 <Heading fontFamily={'body'} size={'sm'} children={'@rahul'} color={'purple.400'}/>
             </VStack>
             <HStack color={'white'} fontSize={40} spacing={['2','10']} justifyContent={'center'}>
-              <a href='https://github.com/imRkofficial' target='blank' rel='noreferrer'>
+              <a href='https://github.com/' target='blank' rel='noreferrer'>
                 <FaGithub/>
               </a>
-              <a href='https://www.linkedin.com/in/rahul-sharma-482bba26a/' target='blank' rel='noreferrer'>
+              <a href='https://www.linkedin.com/' target='blank' rel='noreferrer'>
                 <FaLinkedinIn/>
               </a>
               <a href='/' target='blank' rel='noreferrer'>
